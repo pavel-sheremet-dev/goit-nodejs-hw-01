@@ -28,12 +28,6 @@ yargs(hideBin(process.argv))
     yargs => yargs,
     async () => {
       await getResult(list.resultMsg, getContacts);
-      // try {
-      //   const contacts = await getContacts();
-      //   showResults(list.resultMsg, contacts);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     },
   )
   .command(
@@ -48,12 +42,6 @@ yargs(hideBin(process.argv))
     },
     async ({ id }) => {
       await getResult(get.resultMsg, getContactById, id);
-      // try {
-      //   const contact = await getContactById(id);
-      //   showResults(get.resultMsg, contact);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     },
   )
   .command(
@@ -69,12 +57,6 @@ yargs(hideBin(process.argv))
     },
     async ({ name, email, phone }) => {
       await getResult(add.resultMsg, addContact, name, email, phone);
-      // try {
-      //   const addedContact = await addContact(name, email, phone);
-      //   showResults(add.resultMsg, addedContact);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     },
   )
   .command(
