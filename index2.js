@@ -6,7 +6,7 @@ const {
   getContactById,
   removeContact,
   addContact,
-} = require('./contacts');
+} = require('./contacts2');
 const { list, get, add, remove } = require('./commands/config');
 
 const showResults = (title, result) => console.log(`\n${title}`, result);
