@@ -26,7 +26,8 @@ const getContactById = async id => {
 
 const removeContact = async contactId => {
   const contacts = await tryAsync(getContacts);
-  checkContactId(id, contacts);
+  checkContactId(contactId, contacts);
+
   const filteredContacts = contacts.filter(contact => contact.id !== contactId);
   const stringifiedContacts = JSON.stringify(filteredContacts);
   await tryAsync(fs.writeFile, contactsPath, stringifiedContacts);

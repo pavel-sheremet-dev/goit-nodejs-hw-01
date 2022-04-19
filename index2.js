@@ -6,20 +6,22 @@ const {
   getContactById,
   removeContact,
   addContact,
-} = require('./contacts');
-const { list, get, add, remove } = require('./commands/config');
+} = require('./contacts2');
+const { list, get, add, remove } = require('./config/commands');
+const { id, name, email, phone } = require('./config/options');
 
 const showResults = (title, result) => console.log(`\n${title}`, result);
 
 const getResult = async (msg, asyncFunction, ...args) => {
   try {
     const data = await asyncFunction(...args);
-    console.log(data);
     showResults(msg, data);
   } catch (error) {
     console.log(error.message);
   }
 };
+
+const isArgsPassed = (...args) => [...args].some(arg => arg === undefined);
 
 yargs(hideBin(process.argv))
   .command(
@@ -28,19 +30,13 @@ yargs(hideBin(process.argv))
     yargs => yargs,
     async () => {
       await getResult(list.resultMsg, getContacts);
-      // try {
-      //   const contacts = await getContacts();
-      //   showResults(list.resultMsg, contacts);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     },
   )
   .command(
     get.type,
     get.desc,
     yargs => {
-      if (yargs.argv.id === undefined) {
+      if (isArgsPassed(yargs.argv.id)) {
         console.log(get.helper);
         yargs.showHelp();
       }
@@ -48,12 +44,6 @@ yargs(hideBin(process.argv))
     },
     async ({ id }) => {
       await getResult(get.resultMsg, getContactById, id);
-      // try {
-      //   const contact = await getContactById(id);
-      //   showResults(get.resultMsg, contact);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     },
   )
   .command(
@@ -61,7 +51,7 @@ yargs(hideBin(process.argv))
     add.desc,
     yargs => {
       const { name, email, phone } = yargs.argv;
-      if ([name, email, phone].some(item => item === undefined)) {
+      if (isArgsPassed(name, email, phone)) {
         console.log(add.helper);
         yargs.showHelp();
       }
@@ -69,19 +59,13 @@ yargs(hideBin(process.argv))
     },
     async ({ name, email, phone }) => {
       await getResult(add.resultMsg, addContact, name, email, phone);
-      // try {
-      //   const addedContact = await addContact(name, email, phone);
-      //   showResults(add.resultMsg, addedContact);
-      // } catch (error) {
-      //   console.log(error.message);
-      // }
     },
   )
   .command(
     remove.type,
     remove.desc,
     yargs => {
-      if (yargs.argv.id === undefined) {
+      if (isArgsPassed(yargs.argv.id)) {
         console.log(remove.helper);
         yargs.showHelp();
       }
@@ -91,8 +75,24 @@ yargs(hideBin(process.argv))
       await getResult(remove.resultMsg, removeContact, id);
     },
   )
-  .option('id', { alias: 'i', type: 'string', description: 'contact id' })
-  .option('name', { alias: 'n', type: 'string', description: 'contact name' })
-  .option('email', { alias: 'e', type: 'string', description: 'contact email' })
-  .option('phone', { alias: 'p', type: 'string', description: 'contact phone' })
+  .option(id.flag, {
+    alias: id.alias,
+    type: id.type,
+    description: id.desc,
+  })
+  .option(name.flag, {
+    alias: name.alias,
+    type: name.type,
+    description: name.desc,
+  })
+  .option(email.flag, {
+    alias: email.alias,
+    type: email.type,
+    description: email.desc,
+  })
+  .option(phone.flag, {
+    alias: phone.alias,
+    type: phone.type,
+    description: phone.desc,
+  })
   .parse();
